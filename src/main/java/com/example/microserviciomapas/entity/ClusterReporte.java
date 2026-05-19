@@ -1,4 +1,4 @@
-package com.microserviciomapas.entity;
+package com.example.microserviciomapas.entity;
 
 import jakarta.persistence.*;
 

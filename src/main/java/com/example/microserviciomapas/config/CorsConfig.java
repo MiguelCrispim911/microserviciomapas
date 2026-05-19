@@ -1,4 +1,4 @@
-package com.microserviciomapas.config;
+package com.example.microserviciomapas.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.*;

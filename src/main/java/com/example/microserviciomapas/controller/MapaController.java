@@ -1,6 +1,6 @@
-package com.microserviciomapas.controller;
+package com.example.microserviciomapas.controller;
 
-import com.microserviciomapas.service.MapaService;
+import com.example.microserviciomapas.service.MapaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;

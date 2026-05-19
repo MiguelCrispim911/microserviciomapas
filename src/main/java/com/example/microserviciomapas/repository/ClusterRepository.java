@@ -1,6 +1,6 @@
-package com.microserviciomapas.repository;
+package com.example.microserviciomapas.repository;
 
-import com.microserviciomapas.entity.ClusterReporte;
+import com.example.microserviciomapas.entity.ClusterReporte;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
