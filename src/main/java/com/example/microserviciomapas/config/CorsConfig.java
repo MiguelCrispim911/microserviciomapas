@@ -9,8 +9,16 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
-            .allowedOrigins("*")
+            .allowedOriginPatterns(
+                "https://bugareportaweb.vercel.app",
+                "https://*.vercel.app",
+                "http://localhost:*",
+                "http://127.0.0.1:*"
+            )
             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-            .allowedHeaders("*");
+            .allowedHeaders("*")
+            .exposedHeaders("Location")
+            .allowCredentials(false)
+            .maxAge(3600);
     }
 }
