@@ -6,6 +6,7 @@ import com.example.microserviciomapas.repository.ClusterRepository;
 import com.example.microserviciomapas.repository.ReporteRepository;
 import org.springframework.stereotype.Service;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class MapaService {
@@ -18,14 +19,19 @@ public class MapaService {
         this.clusterRepo = clusterRepo;
     }
 
-    public Map<String, Object> getMapaGeneral(String area) {
+    public Map<String, Object> getMapaGeneral(String area, String estado) {
         List<Map<String, Object>> features = new ArrayList<>();
+        String estadoFiltro = estado == null ? "" : estado.trim().toLowerCase();
+        boolean filtrarEstado = !estadoFiltro.isEmpty() && !"todos".equals(estadoFiltro);
 
         List<Reporte> reportes = (area != null && !area.isEmpty())
             ? reporteRepo.findReportesSinClusterPorZona(area)
             : reporteRepo.findReportesSinCluster();
 
         for (Reporte r : reportes) {
+            if (filtrarEstado && (r.getEstado() == null || !r.getEstado().trim().equalsIgnoreCase(estadoFiltro))) {
+                continue;
+            }
             if (r.getLatitud() != null && r.getLongitud() != null) {
                 Map<String, Object> props = new HashMap<>();
                 props.put("id", r.getId());
@@ -42,6 +48,9 @@ public class MapaService {
             : clusterRepo.findByActivoTrue();
 
         for (ClusterReporte c : clusters) {
+            if (filtrarEstado && (c.getEstadoCluster() == null || !c.getEstadoCluster().trim().equalsIgnoreCase(estadoFiltro))) {
+                continue;
+            }
             if (c.getLatitudCentroide() != null && c.getLongitudCentroide() != null) {
                 Map<String, Object> props = new HashMap<>();
                 props.put("id", c.getId());

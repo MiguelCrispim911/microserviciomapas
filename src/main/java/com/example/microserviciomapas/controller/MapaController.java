@@ -17,8 +17,9 @@ public class MapaController {
 
     @GetMapping("/reportes")
     public ResponseEntity<Map<String, Object>> getMapaGeneral(
-            @RequestParam(required = false) String area) {
-        return ResponseEntity.ok(mapaService.getMapaGeneral(area));
+            @RequestParam(required = false) String area,
+            @RequestParam(required = false) String estado) {
+        return ResponseEntity.ok(mapaService.getMapaGeneral(area, estado));
     }
 
     @GetMapping("/reporte/{id}")
