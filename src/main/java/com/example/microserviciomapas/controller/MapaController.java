@@ -18,8 +18,9 @@ public class MapaController {
     @GetMapping("/reportes")
     public ResponseEntity<Map<String, Object>> getMapaGeneral(
             @RequestParam(required = false) String area,
-            @RequestParam(required = false) String estado) {
-        return ResponseEntity.ok(mapaService.getMapaGeneral(area, estado));
+            @RequestParam(required = false) String estado,
+            @RequestParam(required = false) String tipoReporte) {
+        return ResponseEntity.ok(mapaService.getMapaGeneral(area, estado, tipoReporte));
     }
 
     @GetMapping("/reporte/{id}")
@@ -34,7 +35,8 @@ public class MapaController {
 
     @GetMapping("/calor")
     public ResponseEntity<Map<String, Object>> getCalor(
-            @RequestParam(required = false) String area) {
-        return ResponseEntity.ok(mapaService.getCalor(area));
+            @RequestParam(required = false) String area,
+            @RequestParam(required = false) String tipoReporte) {
+        return ResponseEntity.ok(mapaService.getCalor(area, tipoReporte));
     }
 }

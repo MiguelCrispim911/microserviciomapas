@@ -19,19 +19,12 @@ public class MapaService {
         this.clusterRepo = clusterRepo;
     }
 
-    public Map<String, Object> getMapaGeneral(String area, String estado) {
+    public Map<String, Object> getMapaGeneral(String area, String estado, String tipoReporte) {
         List<Map<String, Object>> features = new ArrayList<>();
-        String estadoFiltro = estado == null ? "" : estado.trim().toLowerCase();
-        boolean filtrarEstado = !estadoFiltro.isEmpty() && !"todos".equals(estadoFiltro);
 
-        List<Reporte> reportes = (area != null && !area.isEmpty())
-            ? reporteRepo.findReportesSinClusterPorZona(area)
-            : reporteRepo.findReportesSinCluster();
+        List<Reporte> reportes = reporteRepo.findReportesSinClusterFiltrados(area, estado, tipoReporte);
 
         for (Reporte r : reportes) {
-            if (filtrarEstado && (r.getEstado() == null || !r.getEstado().trim().equalsIgnoreCase(estadoFiltro))) {
-                continue;
-            }
             if (r.getLatitud() != null && r.getLongitud() != null) {
                 Map<String, Object> props = new HashMap<>();
                 props.put("id", r.getId());
@@ -43,14 +36,9 @@ public class MapaService {
             }
         }
 
-        List<ClusterReporte> clusters = (area != null && !area.isEmpty())
-            ? clusterRepo.findByNombreAreaAndActivoTrue(area)
-            : clusterRepo.findByActivoTrue();
+        List<ClusterReporte> clusters = clusterRepo.findClustersFiltrados(area, estado, tipoReporte);
 
         for (ClusterReporte c : clusters) {
-            if (filtrarEstado && (c.getEstadoCluster() == null || !c.getEstadoCluster().trim().equalsIgnoreCase(estadoFiltro))) {
-                continue;
-            }
             if (c.getLatitudCentroide() != null && c.getLongitudCentroide() != null) {
                 Map<String, Object> props = new HashMap<>();
                 props.put("id", c.getId());
@@ -118,16 +106,14 @@ public class MapaService {
         return buildFeatureCollection(features);
     }
 
-    public Map<String, Object> getCalor(String area) {
-        List<Reporte> reportes = reporteRepo.findTodosParaCalor();
+    public Map<String, Object> getCalor(String area, String tipoReporte) {
+        List<Reporte> reportes = reporteRepo.findTodosParaCalorFiltrados(area, tipoReporte);
         List<Map<String, Object>> features = new ArrayList<>();
 
         for (Reporte r : reportes) {
-            if (area == null || area.isEmpty() || area.equals(r.getZona())) {
-                Map<String, Object> props = new HashMap<>();
-                props.put("weight", 1);
-                features.add(buildFeature(r.getLongitud(), r.getLatitud(), props));
-            }
+            Map<String, Object> props = new HashMap<>();
+            props.put("weight", 1);
+            features.add(buildFeature(r.getLongitud(), r.getLatitud(), props));
         }
 
         return buildFeatureCollection(features);
